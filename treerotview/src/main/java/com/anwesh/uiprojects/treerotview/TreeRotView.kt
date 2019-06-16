@@ -229,4 +229,13 @@ class TreeRotView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : TreeRotView {
+            val view : TreeRotView = TreeRotView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
