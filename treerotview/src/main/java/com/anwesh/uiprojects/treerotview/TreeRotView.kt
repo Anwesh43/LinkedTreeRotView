@@ -131,6 +131,12 @@ class TreeRotView(ctx : Context) : View(ctx) {
                 view.postInvalidate()
             }
         }
+
+        fun stop() {
+            if (animated) {
+                animated = false
+            }
+        }
     }
 
     data class TRNode(var i : Int, val state : State = State()) {
@@ -198,6 +204,28 @@ class TreeRotView(ctx : Context) : View(ctx) {
 
         fun startUpdating(cb : () -> Unit) {
             curr.startUpdating(cb)
+        }
+    }
+
+    data class Renderer(var view : TreeRotView) {
+
+        private val tr : TreeRot = TreeRot(0)
+        private val animator : Animator = Animator(view)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            tr.draw(canvas, paint)
+            animator.animate {
+                tr.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            tr.startUpdating {
+                animator.start()
+            }
         }
     }
 }
