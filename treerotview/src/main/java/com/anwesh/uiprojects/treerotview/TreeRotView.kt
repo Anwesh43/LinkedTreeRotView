@@ -15,7 +15,7 @@ import android.graphics.Color
 val nodes : Int = 5
 val edges : Int = 2
 val parts : Int = 2
-val scGap : Float = 2.9f
+val scGap : Float = 0.05f
 val scDiv : Double = 0.51
 val strokeFactor : Int = 90
 val sizeFactor : Float = 2.9f
@@ -38,16 +38,17 @@ fun Canvas.drawTree(i : Int, size : Float, sc : Float, paint : Paint) {
     val sci : Float = sc.divideScale(i, parts)
     var x : Float = 0f
     var y : Float = -size
-    var x1 : Float = 0f
-    var y1 : Float = 0f
+    var x1 : Float = x
+    var y1 : Float = y
     for (j in 0..(edges)) {
-        val yFactor = size * sci.divideScale(j, edges)
-        val xFactor = (size / 2) * sci.divideScale(j, edges)
+        val scij : Float = sci.divideScale(j, edges)
+        val yFactor = size * scij
+        val xFactor = (size / 2) * scij
         y += yFactor
         x -= xFactor
         drawCircle(x, y, (size / rFactor), paint)
         drawLine(x1, y1, x, y, paint)
-        x1 += xFactor
+        x1 -= xFactor
         y1 += yFactor
     }
 }
@@ -64,7 +65,8 @@ fun Canvas.drawTRNode(i : Int, scale : Float, paint : Paint) {
     paint.strokeCap = Paint.Cap.ROUND
     save()
     translate(w / 2, gap * (i + 1))
-    rotate(90f * sc2)
+    rotate(rotDeg * sc2)
+    drawCircle(0f, -size, size / rFactor, paint)
     for (j in 0..(parts - 1)) {
         save()
         scale(1f - 2 * j, 1f)
